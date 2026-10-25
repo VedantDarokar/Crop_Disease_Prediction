@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>AgroPath AI — Precision Crop Pathology & Diagnostic Center</title>
+  <meta name="description" content="Commercial-grade crop pathology diagnostic suite, GPS weather details, agricultural forecasting, and historical pathogen telemetry advisory.">
+  <link id="appFavicon" rel="icon" type="image/png" href="favicon.png?v=2">
+  <meta name="theme-color" content="#059669">
+
+  <!-- Typography: Inter & Plus Jakarta Sans for Enterprise Credibility -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Lucide Enterprise Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Application Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-agrotech">
+
+  <!-- Professional Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-container">
+      
+      <!-- Brand & Institutional Identity -->
+      <div class="brand-group">
+        <img id="navbarLogoLight" src="logo.png" alt="AgroPath AI Logo" class="brand-logo-img logo-light">
+        <img id="navbarLogoDark" src="logo-dark.png" alt="AgroPath AI Logo" class="brand-logo-img logo-dark">
+        <div class="brand-details">
+          <div class="brand-name">
+            <span class="brand-primary">AgroPath</span>
+            <span class="brand-ai">AI</span>
+          </div>
+          <div class="brand-subline" data-i18n="subline">Precision Crop Pathology &amp; Agronomic Intelligence</div>
+        </div>
+      </div>
+
+      <!-- Live Microclimate & Field Sensor Bar -->
+      <div class="field-sensor-bar">
+        <div id="headerWeatherPill" class="sensor-pill clickable-pill" role="button" tabindex="0" title="Click to view full GPS Field Weather & Spray Station">
+          <i data-lucide="cloud-sun"></i>
+          <span id="headerWeatherText">Field Microclimate: Detecting GPS...</span>
+        </div>
+      </div>
+
+      <!-- Global Controls & Language Selector -->
+      <div class="nav-actions">
+        <!-- Live Multi-Language Translation Dropdown -->
+        <div class="lang-picker">
+          <i data-lucide="globe" class="lang-icon"></i>
+          <select id="languageSelect" class="lang-select" aria-label="Select Language">
+            <option value="English" selected>English (US)</option>
+            <option value="Hindi">हिन्दी (Hindi)</option>
+            <option value="Marathi">मराठी (Marathi)</option>
+            <option value="Spanish">Español (Spanish)</option>
+            <option value="French">Français (French)</option>
+            <option value="Punjabi">ਪੰਜਾਬੀ (Punjabi)</option>
+            <option value="Telugu">తెలుగు (Telugu)</option>
+            <option value="Bengali">বাংলা (Bengali)</option>
+          </select>
+        </div>
+
+        <!-- Dark / Light Mode Switcher -->
+        <button type="button" id="themeToggleBtn" class="nav-btn theme-toggle-btn" title="Toggle Dark / Light Mode" aria-label="Toggle theme">
+          <i data-lucide="moon" id="themeIcon"></i>
+          <span id="themeText">Dark</span>
+        </button>
+
+        <!-- History Button -->
+        <button id="historyBtn" class="nav-btn" title="View Recent Diagnostic Reports">
+          <i data-lucide="archive"></i>
+          <span data-i18n="navHistory">Records</span>
+          <span id="historyBadge" class="nav-counter hidden">0</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Agronomic Field Metadata Ribbon -->
+  <div class="field-ribbon">
+    <div class="ribbon-container">
+      <div class="ribbon-item">
+        <span class="ribbon-label" data-i18n="lblInspectionDate">Inspection Date:</span>
+        <span id="currentDateDisplay" class="ribbon-value">Oct 25, 2026 &bull; 23:25</span>
+      </div>
+      <div class="ribbon-divider"></div>
+      <div class="ribbon-item">
+        <span class="ribbon-label" data-i18n="lblPlotId">Field Plot ID:</span>
+        <span class="ribbon-value">LOT-IND-8422-B</span>
+      </div>
+      <div class="ribbon-divider"></div>
+      <div class="ribbon-item">
+        <span class="ribbon-label" data-i18n="lblProtocol">Protocol:</span>
+        <span class="ribbon-value">ISO/IEC 17025 Agronomic Standards</span>
+      </div>
+      <div class="ribbon-divider"></div>
+      <div class="ribbon-item active-indicator">
+        <span class="status-indicator-live"></span>
+        <span data-i18n="lblEngineReady">Pathology Engine Ready</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Workstation Layout -->
+  <main class="workspace">
+    <!-- Workstation Mode Navigation Tabs -->
+    <div class="workspace-mode-nav">
+      <div class="mode-tabs-container" role="tablist">
+        <button id="modeBtnDiagnosis" class="mode-tab-btn active" data-mode="diagnosis" role="tab" aria-selected="true">
+          <i data-lucide="scan"></i>
+          <span data-i18n="modeDiagnosis">Foliage Diagnosis</span>
+        </button>
+        <button id="modeBtnWeatherDetails" class="mode-tab-btn" data-mode="weather-details" role="tab" aria-selected="false">
+          <i data-lucide="cloud-sun"></i>
+          <span data-i18n="modeWeatherDetails">Weather Details</span>
+          <span class="live-gps-badge">LIVE GPS</span>
+        </button>
+        <button id="modeBtnWeatherForecast" class="mode-tab-btn" data-mode="weather-forecast" role="tab" aria-selected="false">
+          <i data-lucide="calendar-days"></i>
+          <span data-i18n="modeWeatherForecast">Weather Forecasting</span>
+          <span class="nav-badge-subtle">7-DAY</span>
+        </button>
+        <button id="modeBtnWeatherHistory" class="mode-tab-btn" data-mode="weather-history" role="tab" aria-selected="false">
+          <i data-lucide="history"></i>
+          <span data-i18n="modeWeatherHistory">Weather History</span>
+          <span class="nav-badge-subtle">ARCHIVE</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- VIEW 1: Foliage Diagnosis Studio -->
+    <div id="viewDiagnosis" class="workspace-view active">
+      <div class="workspace-layout">
+
+      <!-- LEFT COLUMN: Specimen Ingestion & Inspection Studio -->
+      <section class="panel specimen-panel">
+        
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <h2 class="panel-title" data-i18n="titleSpecimen">Foliage Specimen Inspection</h2>
+            <p class="panel-desc" data-i18n="descSpecimen">Provide macroscopic photography of affected leaf, stem, or fruit tissue</p>
+          </div>
+        </div>
+
+        <!-- Ingestion Dropzone -->
+        <div id="dropzone" class="specimen-dropzone">
+          <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" class="file-input" hidden>
+
+          <!-- Empty State Graphic -->
+          <div id="dropzoneContent" class="dropzone-empty">
+            <div class="dropzone-icon-box">
+              <i data-lucide="microscope" class="dropzone-icon"></i>
+            </div>
+            <h3 class="dropzone-heading" data-i18n="dropHeading">Mount Specimen Image</h3>
+            <p class="dropzone-subtext" data-i18n="dropSub">Drag and drop high-resolution foliage photo or browse system</p>
+            
+            <div class="dropzone-actions">
+              <button type="button" id="browseBtn" class="btn btn-secondary">
+                <i data-lucide="file-up"></i>
+                <span data-i18n="btnBrowse">Upload Specimen</span>
+              </button>
+              <button type="button" id="cameraBtn" class="btn btn-secondary">
+                <i data-lucide="camera"></i>
+                <span data-i18n="btnCamera">Field Camera</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Preview & Interactive Magnifier Lens -->
+          <div id="previewContainer" class="preview-area hidden">
+            <div class="preview-canvas-box" id="previewCanvasBox">
+              <img id="imagePreview" src="" alt="Specimen Preview" class="specimen-image">
+
+              <!-- High-Tech Inspection Reticle & Grid Overlay -->
+              <div class="specimen-grid-overlay"></div>
+              <div id="scanLaser" class="scan-reticle hidden">
+                <div class="reticle-line"></div>
+                <div class="reticle-data" data-i18n="scanningTissue">SCANNING LESION MORPHOLOGY...</div>
+              </div>
+
+              <!-- Magnifier Loupe Tooltip -->
+              <div id="loupeLens" class="magnifier-loupe hidden"></div>
+            </div>
+
+            <div class="preview-meta-bar">
+              <div class="specimen-file-info">
+                <i data-lucide="file-check"></i>
+                <span id="imageFileName" class="meta-name">specimen_sample.jpg</span>
+                <span id="imageFileSize" class="meta-size">1.2 MB</span>
+              </div>
+              <button type="button" id="resetImageBtn" class="btn-link-danger" title="Unmount specimen">
+                <i data-lucide="trash-2"></i>
+                <span data-i18n="btnRemove">Unmount</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Crop Hint / Cultivar Dropdown Menu with Comprehensive Crop List -->
+        <div class="form-field-group">
+          <label for="cropHintInput" class="field-label">
+            <i data-lucide="sprout"></i>
+            <span data-i18n="lblCropCultivar">Crop Family or Cultivar (Optional)</span>
+          </label>
+          <div class="select-container">
+            <select id="cropHintInput" class="field-select">
+              <option value="">Auto-Detect from Foliage Photo (Recommended)</option>
+              <optgroup label="Cereals &amp; Grains">
+                <option value="Wheat">Wheat (Triticum aestivum)</option>
+                <option value="Rice (Paddy)">Rice / Paddy (Oryza sativa)</option>
+                <option value="Corn (Maize)">Corn / Maize (Zea mays)</option>
+                <option value="Barley">Barley (Hordeum vulgare)</option>
+                <option value="Sorghum (Jowar)">Sorghum / Jowar (Sorghum bicolor)</option>
+                <option value="Pearl Millet (Bajra)">Pearl Millet / Bajra (Pennisetum glaucum)</option>
+                <option value="Finger Millet (Ragi)">Finger Millet / Ragi (Eleusine coracana)</option>
+                <option value="Oats">Oats (Avena sativa)</option>
+              </optgroup>
+              <optgroup label="Vegetables">
+                <option value="Tomato">Tomato (Solanum lycopersicum)</option>
+                <option value="Potato">Potato (Solanum tuberosum)</option>
+                <option value="Onion">Onion (Allium cepa)</option>
+                <option value="Garlic">Garlic (Allium sativum)</option>
+                <option value="Chili / Pepper">Chili / Pepper (Capsicum annuum)</option>
+                <option value="Capsicum (Bell Pepper)">Capsicum / Bell Pepper</option>
+                <option value="Eggplant (Brinjal)">Eggplant / Brinjal (Solanum melongena)</option>
+                <option value="Okra (Ladyfinger)">Okra / Ladyfinger (Abelmoschus esculentus)</option>
+                <option value="Cabbage">Cabbage (Brassica oleracea)</option>
+                <option value="Cauliflower">Cauliflower (Brassica oleracea)</option>
+                <option value="Cucumber">Cucumber (Cucumis sativus)</option>
+                <option value="Carrot">Carrot (Daucus carota)</option>
+                <option value="Radish">Radish (Raphanus sativus)</option>
+                <option value="Spinach">Spinach (Spinacia oleracea)</option>
+                <option value="Bitter Gourd (Karela)">Bitter Gourd / Karela (Momordica charantia)</option>
+                <option value="Bottle Gourd (Lauki)">Bottle Gourd / Lauki (Lagenaria siceraria)</option>
+                <option value="Ridge Gourd (Turai)">Ridge Gourd / Turai (Luffa acutangula)</option>
+                <option value="Pumpkin">Pumpkin (Cucurbita moschata)</option>
+                <option value="Green Pea">Green Pea (Pisum sativum)</option>
+                <option value="French Beans">French Beans (Phaseolus vulgaris)</option>
+              </optgroup>
+              <optgroup label="Fruits &amp; Orchards">
+                <option value="Apple">Apple (Malus domestica)</option>
+                <option value="Grapevine">Grapevine (Vitis vinifera)</option>
+                <option value="Banana">Banana (Musa acuminata)</option>
+                <option value="Mango">Mango (Mangifera indica)</option>
+                <option value="Citrus (Orange / Sweet Lime)">Citrus (Orange / Mosambi)</option>
+                <option value="Lemon / Lime">Lemon / Lime (Citrus limon)</option>
+                <option value="Papaya">Papaya (Carica papaya)</option>
+                <option value="Guava">Guava (Psidium guajava)</option>
+                <option value="Pomegranate">Pomegranate (Punica granatum)</option>
+                <option value="Strawberry">Strawberry (Fragaria ananassa)</option>
+                <option value="Watermelon">Watermelon (Citrullus lanatus)</option>
+                <option value="Muskmelon">Muskmelon (Cucumis melo)</option>
+                <option value="Pineapple">Pineapple (Ananas comosus)</option>
+                <option value="Peach">Peach (Prunus persica)</option>
+                <option value="Plum">Plum (Prunus domestica)</option>
+                <option value="Walnut / Pecan">Walnut / Pecan</option>
+              </optgroup>
+              <optgroup label="Cash Crops &amp; Fiber">
+                <option value="Cotton">Cotton (Gossypium hirsutum)</option>
+                <option value="Sugarcane">Sugarcane (Saccharum officinarum)</option>
+                <option value="Tobacco">Tobacco (Nicotiana tabacum)</option>
+                <option value="Jute">Jute (Corchorus olitorius)</option>
+              </optgroup>
+              <optgroup label="Oilseeds &amp; Legumes / Pulses">
+                <option value="Soybean">Soybean (Glycine max)</option>
+                <option value="Peanut (Groundnut)">Groundnut / Peanut (Arachis hypogaea)</option>
+                <option value="Mustard (Rapeseed)">Mustard / Rapeseed (Brassica nigra)</option>
+                <option value="Sunflower">Sunflower (Helianthus annuus)</option>
+                <option value="Sesame (Til)">Sesame / Til (Sesamum indicum)</option>
+                <option value="Chickpea (Gram / Chana)">Chickpea / Chana (Cicer arietinum)</option>
+                <option value="Pigeon Pea (Arhar / Tur)">Pigeon Pea / Tur (Cajanus cajan)</option>
+                <option value="Green Gram (Moong)">Green Gram / Moong (Vigna radiata)</option>
+                <option value="Black Gram (Urad)">Black Gram / Urad (Vigna mungo)</option>
+                <option value="Lentil (Masoor)">Lentil / Masoor (Lens culinaris)</option>
+              </optgroup>
+              <optgroup label="Spices &amp; Plantation Crops">
+                <option value="Tea">Tea (Camellia sinensis)</option>
+                <option value="Coffee">Coffee (Coffea arabica)</option>
+                <option value="Ginger">Ginger (Zingiber officinale)</option>
+                <option value="Turmeric">Turmeric (Curcuma longa)</option>
+                <option value="Cardamom">Cardamom (Elettaria cardamomum)</option>
+                <option value="Black Pepper">Black Pepper (Piper nigrum)</option>
+                <option value="Cumin (Jeera)">Cumin / Jeera (Cuminum cyminum)</option>
+                <option value="Coriander (Dhania)">Coriander (Coriandrum sativum)</option>
+                <option value="Fenugreek (Methi)">Fenugreek / Methi (Trigonella foenum-graecum)</option>
+              </optgroup>
+              <optgroup label="Floriculture &amp; Other">
+                <option value="Rose">Rose (Rosa spp.)</option>
+                <option value="Marigold">Marigold (Tagetes erecta)</option>
+                <option value="Chrysanthemum">Chrysanthemum (Chrysanthemum indicum)</option>
+                <option value="Carnation">Carnation (Dianthus caryophyllus)</option>
+                <option value="Other">Other / Unlisted Cultivar</option>
+              </optgroup>
+            </select>
+          </div>
+        </div>
+
+        <!-- Primary Action Button -->
+        <button type="button" id="analyzeBtn" class="btn btn-primary btn-block btn-execute" disabled>
+          <i data-lucide="activity"></i>
+          <span id="analyzeBtnText" data-i18n="btnRunAnalysis">Run Pathological Diagnostic</span>
+        </button>
+
+        <!-- Curated Reference Specimens Gallery -->
+        <div class="reference-specimens">
+          <div class="gallery-title-row">
+            <span class="gallery-title" data-i18n="lblRefSpecimens">Standard Reference Library Specimens</span>
+            <span class="gallery-badge" data-i18n="lblQuickTest">1-Click Test</span>
+          </div>
+
+          <div class="specimen-cards-grid">
+            
+            <div class="specimen-card" data-sample="tomato_blight" title="Examine Tomato Early Blight specimen">
+              <img src="/samples/tomato_blight.jpg" alt="Tomato Early Blight" class="card-thumb">
+              <div class="card-meta">
+                <span class="specimen-host" data-i18n="cropTomato">Tomato</span>
+                <span class="specimen-cond" data-i18n="disTomatoBlight">Early Blight</span>
+              </div>
+              <span class="taxa-tag fungal">Fungus</span>
+            </div>
+
+            <div class="specimen-card" data-sample="corn_rust" title="Examine Corn Common Rust specimen">
+              <img src="/samples/corn_rust.jpg" alt="Corn Rust" class="card-thumb">
+              <div class="card-meta">
+                <span class="specimen-host" data-i18n="cropCorn">Corn (Maize)</span>
+                <span class="specimen-cond" data-i18n="disCornRust">Common Rust</span>
+              </div>
+              <span class="taxa-tag fungal">Fungus</span>
+            </div>
+
+            <div class="specimen-card" data-sample="grape_mildew" title="Examine Grapevine Powdery Mildew specimen">
+              <img src="/samples/grape_mildew.jpg" alt="Grapevine Mildew" class="card-thumb">
+              <div class="card-meta">
+                <span class="specimen-host" data-i18n="cropGrape">Grapevine</span>
+                <span class="specimen-cond" data-i18n="disGrapeMildew">Powdery Mildew</span>
+              </div>
+              <span class="taxa-tag fungal">Fungus</span>
+            </div>
+
+            <div class="specimen-card" data-sample="apple_scab" title="Examine Apple Scab specimen">
+              <img src="/samples/apple_scab.jpg" alt="Apple Scab" class="card-thumb">
+              <div class="card-meta">
+                <span class="specimen-host" data-i18n="cropApple">Apple Leaf</span>
+                <span class="specimen-cond" data-i18n="disAppleScab">Apple Scab</span>
+              </div>
+              <span class="taxa-tag fungal">Fungus</span>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT COLUMN: Diagnostic Analysis & Agronomic Advisory Center -->
+      <section class="panel diagnostic-panel">
+        
+        <!-- State 1: Awaiting Specimen -->
+        <div id="idleState" class="panel-state-view idle-view">
+          <div class="standby-illustration">
+            <div class="standby-icon-ring">
+              <i data-lucide="shield-check" class="standby-icon"></i>
+            </div>
+          </div>
+          <h3 class="standby-title" data-i18n="idleTitle">Diagnostic Workstation Inactive</h3>
+          <p class="standby-desc" data-i18n="idleDesc">
+            Mount a leaf specimen photo or select a reference sample from the left panel. The pathology diagnostic engine will analyze cellular lesion patterns, cross-reference taxonomic indices, and formulate certified treatment protocols.
+          </p>
+
+          <div class="system-capabilities">
+            <div class="capability-box">
+              <i data-lucide="microscope"></i>
+              <div>
+                <strong data-i18n="cap1Title">Cellular Pathogen Taxonomy</strong>
+                <p data-i18n="cap1Desc">Binomial identification of fungal, bacterial, and viral vectors.</p>
+              </div>
+            </div>
+            <div class="capability-box">
+              <i data-lucide="leaf"></i>
+              <div>
+                <strong data-i18n="cap2Title">Certified Bio-Organic Recipes</strong>
+                <p data-i18n="cap2Desc">Exact natural dilution ratios, botanical extracts, and application timings.</p>
+              </div>
+            </div>
+            <div class="capability-box">
+              <i data-lucide="flask-round"></i>
+              <div>
+                <strong data-i18n="cap3Title">Chemical Crop Protection Protocols</strong>
+                <p data-i18n="cap3Desc">Active ingredients, field dosages, PPE safety, and harvest intervals.</p>
+              </div>
+            </div>
+            <div class="capability-box">
+              <i data-lucide="file-text"></i>
+              <div>
+                <strong data-i18n="cap4Title">Certified Field PDF Generation</strong>
+                <p data-i18n="cap4Desc">Instant printable agronomy laboratory diagnostic reports for field records.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Standby GPS Field Weather Summary -->
+          <div class="standby-weather-widget" id="standbyWeatherWidget">
+            <div class="standby-weather-header">
+              <div class="sw-location">
+                <i data-lucide="map-pin"></i>
+                <span id="standbyLocationText">Local Field GPS: Detecting...</span>
+              </div>
+              <span id="standbySprayBadge" class="spray-badge safe">Calculating Spray Window...</span>
+            </div>
+            <div class="standby-weather-metrics">
+              <div class="sw-metric"><span class="sw-label">Temp:</span> <strong id="standbyTemp">--°C</strong></div>
+              <div class="sw-metric"><span class="sw-label">Humidity:</span> <strong id="standbyHumidity">--%</strong></div>
+              <div class="sw-metric"><span class="sw-label">Wind Speed:</span> <strong id="standbyWind">-- km/h</strong></div>
+              <div class="sw-metric"><span class="sw-label">Rain Risk:</span> <strong id="standbyRain">0%</strong></div>
+            </div>
+            <div class="sw-footer">
+              <button type="button" id="standbyViewWeatherBtn" class="btn btn-sm btn-outline-clean sw-btn">
+                <i data-lucide="cloud-sun"></i>
+                <span data-i18n="btnOpenWeatherTab">Open Live Weather Station &rarr;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- State 2: Active Pathological Scan -->
+        <div id="loadingState" class="panel-state-view loading-view hidden">
+          <div class="biometric-loader">
+            <div class="biometric-rings"></div>
+            <div class="biometric-core">
+              <i data-lucide="dna" class="core-icon"></i>
+            </div>
+          </div>
+          <h3 class="loading-title" data-i18n="loadTitle">Processing Pathological Biometrics</h3>
+          <p id="loadingStepText" class="loading-step-text" data-i18n="loadStep1">Extracting necrosis morphology and chlorotic lesion margins...</p>
+          
+          <div class="progress-track">
+            <div id="analysisProgressBar" class="progress-bar-fill"></div>
+          </div>
+
+          <div class="workflow-steps">
+            <div id="step1" class="workflow-step active">
+              <i data-lucide="search"></i>
+              <span data-i18n="step1Text">Tissue Segmentation</span>
+            </div>
+            <div id="step2" class="workflow-step">
+              <i data-lucide="database"></i>
+              <span data-i18n="step2Text">Pathology Engine</span>
+            </div>
+            <div id="step3" class="workflow-step">
+              <i data-lucide="clipboard-check"></i>
+              <span data-i18n="step3Text">Treatment Protocol</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- State 3: Diagnostic Report & Agronomic Advisory -->
+        <div id="resultsState" class="panel-state-view results-view hidden">
+          
+          <!-- Clinical Report Header Banner -->
+          <div class="report-banner">
+            <div class="banner-top-row">
+              <div class="pathology-meta-primary">
+                <div class="host-plant-badge" id="resCropName">Tomato (Solanum lycopersicum)</div>
+                <h1 class="pathology-title" id="resDiseaseName">Early Blight (Target Spot)</h1>
+                <div class="pathogen-latin" id="resPathogenName">
+                  <i data-lucide="microscope"></i>
+                  <span>Alternaria solani &bull; Ascomycota</span>
+                </div>
+              </div>
+
+              <!-- Diagnostic Match Index Gauge -->
+              <div class="diagnostic-vital-gauges">
+                <div class="match-score-box">
+                  <div class="match-percentage" id="resConfidenceVal">96%</div>
+                  <div class="match-label" data-i18n="lblMatchIndex">Diagnostic Index</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Toolbar (TTS Voice, PDF Export, Clipboard) -->
+            <div class="report-action-bar">
+              <button id="ttsPlayBtn" class="btn btn-sm btn-outline-clean" title="Listen to spoken agronomic protocol">
+                <i data-lucide="volume-2"></i>
+                <span id="ttsBtnText" data-i18n="btnListenAdvisory">Listen to Field Advisory</span>
+              </button>
+              <button id="exportReportBtn" class="btn btn-sm btn-outline-clean" title="Export formal certified field PDF report">
+                <i data-lucide="printer"></i>
+                <span data-i18n="btnExportPdf">Export Certified Field PDF</span>
+              </button>
+              <button id="shareReportBtn" class="btn btn-sm btn-outline-clean" title="Copy diagnostic protocol summary">
+                <i data-lucide="clipboard"></i>
+                <span data-i18n="btnCopySummary">Copy Protocol</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Agronomic Metrics Strip -->
+          <div class="metrics-strip">
+            <div class="metric-card">
+              <span class="m-label" data-i18n="lblTaxaClass">Taxonomic Vector</span>
+              <span class="m-val" id="resCategory">Fungal (Ascomycota)</span>
+            </div>
+            <div class="metric-card">
+              <span class="m-label" data-i18n="lblCanopyAffected">Affected Leaf Area</span>
+              <span class="m-val" id="resAffectedArea">~42% of foliage</span>
+            </div>
+            <div class="metric-card">
+              <span class="m-label" data-i18n="lblLeafMoisture">Canopy Moisture</span>
+              <span class="m-val" id="resMoisture">Elevated (>85% RH)</span>
+            </div>
+            <div class="metric-card">
+              <span class="m-label" data-i18n="lblRecoveryForecast">Recovery Outlook</span>
+              <span class="m-val highlight" id="resPrognosis">Treat within 48h</span>
+            </div>
+          </div>
+
+          <!-- Advisory Sections Tabbed Navigation -->
+          <nav class="advisory-tab-bar" aria-label="Advisory Tabs">
+            <button class="tab-button active" data-tab="tab-overview">
+              <i data-lucide="file-text"></i>
+              <span data-i18n="tabOverview">Pathology & Symptoms</span>
+            </button>
+            <button class="tab-button" data-tab="tab-immediate">
+              <i data-lucide="shield-alert"></i>
+              <span data-i18n="tabImmediate">24-48h Containment</span>
+            </button>
+            <button class="tab-button" data-tab="tab-organic">
+              <i data-lucide="leaf"></i>
+              <span data-i18n="tabOrganic">Bio-Organic Remedies</span>
+            </button>
+            <button class="tab-button" data-tab="tab-chemical">
+              <i data-lucide="flask-conical"></i>
+              <span data-i18n="tabChemical">Chemical Treatments</span>
+            </button>
+            <button class="tab-button" data-tab="tab-prevention">
+              <i data-lucide="sun-medium"></i>
+              <span data-i18n="tabPrevention">Prevention & Climate</span>
+            </button>
+            <button class="tab-button" data-tab="tab-weather">
+              <i data-lucide="cloud-sun"></i>
+              <span data-i18n="tabWeather">Field Weather (GPS)</span>
+            </button>
+          </nav>
+
+          <!-- Tab Content Views -->
+          <div class="tab-views-container">
+
+            <!-- TAB 1: Pathology & Key Symptoms -->
+            <div id="tab-overview" class="tab-view active">
+              <div class="card-section">
+                <div class="card-section-header">
+                  <i data-lucide="file-check"></i>
+                  <h4 data-i18n="secExecutiveSummary">Executive Diagnostic Summary</h4>
+                </div>
+                <p id="resSummary" class="executive-summary-text">
+                  Distinct concentric target-board lesions with surrounding chlorotic yellow halos characteristic of Alternaria solani.
+                </p>
+              </div>
+
+              <div class="card-section">
+                <div class="card-section-header">
+                  <i data-lucide="scan-eye"></i>
+                  <h4 data-i18n="secVisualSymptoms">Verified Microscopic & Visual Symptoms</h4>
+                </div>
+                <ul id="resSymptomsList" class="pathology-bullet-list">
+                  <!-- Dynamically populated -->
+                </ul>
+              </div>
+            </div>
+
+            <!-- TAB 2: Immediate Emergency Protocol -->
+            <div id="tab-immediate" class="tab-view">
+              <div class="advisory-alert-callout alert-urgent">
+                <i data-lucide="clock-alert" class="callout-icon"></i>
+                <div class="callout-content">
+                  <strong data-i18n="alertUrgentTitle">Immediate 24–48 Hour Isolation Protocol:</strong>
+                  <span data-i18n="alertUrgentDesc">Act swiftly to contain fungal conidia or bacterial inoculum from spreading across neighboring crop rows via wind drift and overhead splash.</span>
+                </div>
+              </div>
+
+              <div class="card-section">
+                <ul id="resImmediateList" class="checklist-protocol">
+                  <!-- Dynamically populated -->
+                </ul>
+              </div>
+            </div>
+
+            <!-- TAB 3: Certified Bio-Organic Remedies -->
+            <div id="tab-organic" class="tab-view">
+              <div class="tab-section-intro" data-i18n="introOrganic">
+                Certified ecological plant protection measures safe for beneficial pollinators, biological predators, and organic certification compliance:
+              </div>
+              <div id="resOrganicGrid" class="remedies-container">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- TAB 4: Commercial Chemical Solutions -->
+            <div id="tab-chemical" class="tab-view">
+              <div class="advisory-alert-callout alert-safety">
+                <i data-lucide="alert-triangle" class="callout-icon"></i>
+                <div class="callout-content">
+                  <strong data-i18n="alertSafetyTitle">Fungicide Safety & Stewardship:</strong>
+                  <span data-i18n="alertSafetyDesc">Strictly observe certified Pre-Harvest Intervals (PHI), calibrate spray equipment, wear full PPE (nitrile gloves, particulate respirator, eye protection), and adhere to FRAC mode of action rotations.</span>
+                </div>
+              </div>
+
+              <div id="resChemicalGrid" class="chemicals-container">
+                <!-- Dynamically populated -->
+              </div>
+            </div>
+
+            <!-- TAB 5: Prevention & Microclimate Risk -->
+            <div id="tab-prevention" class="tab-view">
+              <div class="card-section microclimate-section">
+                <div class="card-section-header">
+                  <i data-lucide="thermometer-sun"></i>
+                  <h4 data-i18n="secMicroclimate">Pathogen Microclimate Dynamics</h4>
+                </div>
+                
+                <div class="microclimate-grid">
+                  <div class="microclimate-box">
+                    <span class="mc-label" data-i18n="lblOptimalHumidity">Sporulation Humidity</span>
+                    <span id="resFavorableHumidity" class="mc-val">> 80% Relative Humidity</span>
+                  </div>
+                  <div class="microclimate-box">
+                    <span class="mc-label" data-i18n="lblOptimalTemp">Optimal Temperature Range</span>
+                    <span id="resFavorableTemp" class="mc-val">24°C - 29°C</span>
+                  </div>
+                </div>
+
+                <div class="epidemic-alert-box" id="resWeatherWarning">
+                  Extended leaf wetness exceeding 6 hours drastically accelerates spore germination and penetration.
+                </div>
+              </div>
+
+              <div class="card-section">
+                <div class="card-section-header">
+                  <i data-lucide="shield-check"></i>
+                  <h4 data-i18n="secAgronomicPrevention">Long-Term Agronomic Sanitation Practices</h4>
+                </div>
+                <ul id="resPreventionList" class="pathology-bullet-list">
+                  <!-- Dynamically populated -->
+                </ul>
+              </div>
+            </div>
+
+            <!-- TAB 6: Live GPS Field Weather & Spray Advisory -->
+            <div id="tab-weather" class="tab-view">
+              <div class="weather-tab-card">
+                
+                <!-- Weather Header & Coordinates -->
+                <div class="weather-header-row">
+                  <div class="weather-geo-info">
+                    <div class="geo-badge">
+                      <i data-lucide="map-pin"></i>
+                      <span id="weatherLocationName">Detecting Field GPS...</span>
+                    </div>
+                    <div class="geo-coords" id="weatherCoordinates">GPS Coordinates: Acquiring...</div>
+                  </div>
+                  <button type="button" id="refreshGpsBtn" class="btn btn-sm btn-outline-clean btn-refresh-gps" title="Update live GPS coordinates">
+                    <i data-lucide="refresh-cw"></i>
+                    <span data-i18n="btnRefreshGps">Refresh GPS Weather</span>
+                  </button>
+                </div>
+
+                <!-- Primary Weather Metrics Dashboard -->
+                <div class="weather-current-grid">
+                  <div class="weather-stat-card current-temp-card">
+                    <span class="w-stat-label" data-i18n="lblCurrentTemp">Ambient Temperature</span>
+                    <div class="temp-display">
+                      <span id="weatherCurrentTemp" class="temp-value">--</span><span class="temp-unit">°C</span>
+                    </div>
+                    <span id="weatherConditionText" class="w-stat-sub">Clear Sky</span>
+                  </div>
+
+                  <div class="weather-stat-card">
+                    <span class="w-stat-label" data-i18n="lblRelativeHumidity">Relative Humidity</span>
+                    <div class="stat-highlight">
+                      <i data-lucide="droplets"></i>
+                      <span id="weatherHumidity">--%</span>
+                    </div>
+                    <span id="weatherHumidityStatus" class="w-stat-sub">Normal Moisture</span>
+                  </div>
+
+                  <div class="weather-stat-card">
+                    <span class="w-stat-label" data-i18n="lblWindSpeed">Field Wind Velocity</span>
+                    <div class="stat-highlight">
+                      <i data-lucide="wind"></i>
+                      <span id="weatherWindSpeed">-- km/h</span>
+                    </div>
+                    <span id="weatherWindStatus" class="w-stat-sub">Low Drift Risk</span>
+                  </div>
+
+                  <div class="weather-stat-card">
+                    <span class="w-stat-label" data-i18n="lblPrecipitation">Rainfall Probability</span>
+                    <div class="stat-highlight">
+                      <i data-lucide="cloud-rain"></i>
+                      <span id="weatherRainChance">0%</span>
+                    </div>
+                    <span id="weatherRainStatus" class="w-stat-sub">No rain expected</span>
+                  </div>
+                </div>
+
+                <!-- Agricultural Spraying Advisory Strip -->
+                <div class="spray-advisory-card" id="sprayAdvisoryCard">
+                  <div class="spray-icon-box">
+                    <i data-lucide="shield-check" id="sprayStatusIcon"></i>
+                  </div>
+                  <div class="spray-advisory-content">
+                    <h5 id="sprayStatusTitle" data-i18n="sprayTitleEvaluating">Evaluating Field Spraying Window...</h5>
+                    <p id="sprayStatusDesc" data-i18n="sprayDescEvaluating">Calculating real-time wind drift velocity and 6-hour precipitation risk from GPS telemetry.</p>
+                  </div>
+                </div>
+
+                <!-- 3-Day Agronomic Weather Forecast -->
+                <div class="forecast-section">
+                  <h5 class="forecast-title" data-i18n="titleForecast">3-Day Agricultural Microclimate Forecast</h5>
+                  <div class="forecast-cards-grid" id="weatherForecastGrid">
+                    <!-- Populated dynamically via JS -->
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Official Agronomic Verification Stamp -->
+          <div class="certification-footer">
+            <div class="cert-left">
+              <i data-lucide="award" class="cert-icon"></i>
+              <div>
+                <strong data-i18n="certFooterTitle">Certified Agronomic Laboratory Diagnostic Protocol</strong>
+                <p data-i18n="certFooterDesc">Verified against international plant pathology indices and IPM crop protection standards.</p>
+              </div>
+            </div>
+            <div class="cert-sig">
+              <span class="sig-title" data-i18n="certVerifiedBy">Verified By:</span>
+              <span class="sig-name">Chief Agricultural Extension Officer</span>
+              <span class="sig-stamp">REG. NO. AG-2026-9042</span>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      </div> <!-- End .workspace-layout -->
+    </div> <!-- End #viewDiagnosis -->
+
+    <!-- VIEW 2: Dedicated Live GPS Field Weather Details Station -->
+    <div id="viewWeatherDetails" class="workspace-view hidden">
+      <section class="panel weather-dashboard-panel">
+        
+        <!-- Weather Station Top Header -->
+        <div class="weather-panel-header">
+          <div class="wp-title-group">
+            <div class="wp-badge">
+              <span class="status-indicator-live"></span>
+              <span data-i18n="weatherLiveTelemetry">Real-time GPS Telemetry</span>
+            </div>
+            <h2 class="panel-title" data-i18n="weatherStationTitle">Field Microclimate &amp; Spraying Suitability Center</h2>
+            <p class="panel-desc" data-i18n="weatherStationDesc">Live atmospheric telemetry, wind drift velocity, leaf wetness models, and agricultural chemical spray windows.</p>
+          </div>
+          
+          <div class="wp-header-actions">
+            <div class="geo-badge-large">
+              <i data-lucide="map-pin"></i>
+              <div>
+                <span id="mainWeatherLocationName" class="loc-name">Detecting Field GPS...</span>
+                <span id="mainWeatherCoordinates" class="loc-coords">Acquiring satellite lock...</span>
+              </div>
+            </div>
+            <button type="button" id="mainRefreshGpsBtn" class="btn btn-primary btn-refresh-gps">
+              <i data-lucide="refresh-cw"></i>
+              <span data-i18n="btnRefreshGps">Refresh GPS Telemetry</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Real-Time Spraying Suitability Window Banner -->
+        <div class="spray-window-hero" id="mainSprayHero">
+          <div class="spray-hero-icon-box">
+            <i data-lucide="shield-check" id="mainSprayHeroIcon"></i>
+          </div>
+          <div class="spray-hero-body">
+            <div class="spray-hero-status-row">
+              <span class="spray-hero-pill optimal" id="mainSprayHeroPill">OPTIMAL SPRAY WINDOW</span>
+              <span class="spray-hero-time" id="mainSprayHeroTime">Real-time Telemetry</span>
+            </div>
+            <h3 class="spray-hero-title" id="mainSprayHeroTitle">Optimal Conditions for Foliar Spray &amp; Crop Protection</h3>
+            <p class="spray-hero-desc" id="mainSprayHeroDesc">
+              Wind velocity is calm and no rainfall is forecasted within the 6-hour uptake window. Droplet drift is minimal, allowing systemic absorption and full leaf canopy penetration.
+            </p>
+            <div class="spray-guidance-chips">
+              <div class="guidance-chip"><i data-lucide="wind"></i> <span>Drift Hazard: <strong id="mainDriftChip">Minimal (&lt; 15 km/h)</strong></span></div>
+              <div class="guidance-chip"><i data-lucide="cloud-rain"></i> <span>Wash-off Risk: <strong id="mainWashoffChip">0% Rain Probability</strong></span></div>
+              <div class="guidance-chip"><i data-lucide="droplet"></i> <span>Recommended Nozzle: <strong id="mainNozzleChip">Medium / Flat Fan</strong></span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Core Microclimate Sensors Grid -->
+        <div class="main-weather-sensors-grid">
+          
+          <div class="main-sensor-card card-temp">
+            <div class="sensor-card-top">
+              <span class="sensor-card-label" data-i18n="lblCurrentTemp">Ambient Air Temperature</span>
+              <i data-lucide="thermometer" class="sensor-icon"></i>
+            </div>
+            <div class="sensor-card-value-row">
+              <span id="mainWeatherCurrentTemp" class="sensor-val-num">--</span>
+              <span class="sensor-val-unit">°C</span>
+            </div>
+            <div class="sensor-card-sub" id="mainWeatherConditionText">Detecting atmosphere...</div>
+            <div class="sensor-card-range">
+              <span>Today's Range:</span>
+              <strong id="mainWeatherTempRange">--°C / --°C</strong>
+            </div>
+          </div>
+
+          <div class="main-sensor-card card-humidity">
+            <div class="sensor-card-top">
+              <span class="sensor-card-label" data-i18n="lblRelativeHumidity">Relative Canopy Humidity</span>
+              <i data-lucide="droplets" class="sensor-icon"></i>
+            </div>
+            <div class="sensor-card-value-row">
+              <span id="mainWeatherHumidity" class="sensor-val-num">--</span>
+              <span class="sensor-val-unit">%</span>
+            </div>
+            <div class="sensor-card-sub" id="mainWeatherHumidityStatus">Normal Canopy Moisture</div>
+            <div class="sensor-card-range">
+              <span>Fungal Spore Risk:</span>
+              <strong id="mainHumidityRiskBadge" class="sensor-tag safe">Low Inoculum</strong>
+            </div>
+          </div>
+
+          <div class="main-sensor-card card-wind">
+            <div class="sensor-card-top">
+              <span class="sensor-card-label" data-i18n="lblWindSpeed">Field Wind Velocity (10m)</span>
+              <i data-lucide="wind" class="sensor-icon"></i>
+            </div>
+            <div class="sensor-card-value-row">
+              <span id="mainWeatherWindSpeed" class="sensor-val-num">--</span>
+              <span class="sensor-val-unit">km/h</span>
+            </div>
+            <div class="sensor-card-sub" id="mainWeatherWindStatus">Safe Spray Threshold (&lt; 15 km/h)</div>
+            <div class="sensor-card-range">
+              <span>Drift Classification:</span>
+              <strong id="mainWindDriftBadge" class="sensor-tag safe">Negligible Drift</strong>
+            </div>
+          </div>
+
+          <div class="main-sensor-card card-rain">
+            <div class="sensor-card-top">
+              <span class="sensor-card-label" data-i18n="lblPrecipitation">Precipitation Probability</span>
+              <i data-lucide="cloud-rain" class="sensor-icon"></i>
+            </div>
+            <div class="sensor-card-value-row">
+              <span id="mainWeatherRainChance" class="sensor-val-num">0</span>
+              <span class="sensor-val-unit">%</span>
+            </div>
+            <div class="sensor-card-sub" id="mainWeatherRainStatus">No Precipitation Detected</div>
+            <div class="sensor-card-range">
+              <span>Chemical Wash-off:</span>
+              <strong id="mainRainWashBadge" class="sensor-tag safe">Safe to Apply</strong>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Microclimate Pathogen Risk Index & Quick Navigation -->
+        <div class="weather-split-grid">
+          
+          <!-- Pathogen Disease Risk Gauge -->
+          <div class="weather-subpanel">
+            <div class="subpanel-header">
+              <i data-lucide="microscope"></i>
+              <h4 data-i18n="titlePathogenRiskMatrix">Pathogen Microclimate Incubation Risk</h4>
+            </div>
+            <p class="subpanel-desc" data-i18n="descPathogenRiskMatrix">
+              Evaluated in real-time based on your field's current ambient temperature and humidity against established epidemiological spore germination models.
+            </p>
+
+            <div class="pathogen-risk-list">
+              <div class="pathogen-risk-item" id="riskItemBlight">
+                <div class="pr-info">
+                  <strong>Early / Late Blight (Alternaria / Phytophthora)</strong>
+                  <span>Favored by 22°C - 29°C with RH &gt; 80%</span>
+                </div>
+                <span class="risk-badge" id="riskBadgeBlight">Evaluating...</span>
+              </div>
+
+              <div class="pathogen-risk-item" id="riskItemMildew">
+                <div class="pr-info">
+                  <strong>Powdery Mildew (Erysiphales)</strong>
+                  <span>Favored by 20°C - 28°C and moderate-to-high humidity</span>
+                </div>
+                <span class="risk-badge" id="riskBadgeMildew">Evaluating...</span>
+              </div>
+
+              <div class="pathogen-risk-item" id="riskItemRust">
+                <div class="pr-info">
+                  <strong>Cereal &amp; Corn Rust (Puccinia spp.)</strong>
+                  <span>Favored by 16°C - 25°C and continuous leaf wetness</span>
+                </div>
+                <span class="risk-badge" id="riskBadgeRust">Evaluating...</span>
+              </div>
+
+              <div class="pathogen-risk-item" id="riskItemBacteria">
+                <div class="pr-info">
+                  <strong>Bacterial Leaf Spot / Wilt (Xanthomonas)</strong>
+                  <span>Favored by warm temperatures (&gt; 28°C) and heavy rain splash</span>
+                </div>
+                <span class="risk-badge" id="riskBadgeBacteria">Evaluating...</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Navigation Panel -->
+          <div class="weather-subpanel nav-links-subpanel">
+            <div class="subpanel-header">
+              <i data-lucide="compass"></i>
+              <h4>Agricultural Hub Navigation</h4>
+            </div>
+            <p class="subpanel-desc">Quickly pivot between 24-hour predictive forecasting, historical 7-day weather records, and foliage disease scanning.</p>
+
+            <div class="station-nav-actions">
+              <button type="button" class="btn btn-outline-agri btn-block" id="btnGoToForecast">
+                <i data-lucide="calendar-days"></i>
+                <span data-i18n="btnNavForecast">View 7-Day Weather Forecast &amp; Hourly Timeline &rarr;</span>
+              </button>
+              <button type="button" class="btn btn-outline-agri btn-block" id="btnGoToHistory">
+                <i data-lucide="history"></i>
+                <span data-i18n="btnNavHistory">View Past 7-Day Weather History &amp; Rain Log &rarr;</span>
+              </button>
+              <button type="button" class="btn btn-primary btn-block" id="btnBackToDiagnosis">
+                <i data-lucide="scan"></i>
+                <span data-i18n="btnGoToDiagnosis">Mount Diseased Crop Leaf for AI Diagnosis &rarr;</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+    </div> <!-- End #viewWeatherDetails -->
+
+    <!-- VIEW 3: Dedicated Weather Forecasting View -->
+    <div id="viewWeatherForecast" class="workspace-view hidden">
+      <section class="panel weather-dashboard-panel">
+        <div class="weather-panel-header">
+          <div class="wp-title-group">
+            <div class="wp-badge">
+              <i data-lucide="calendar-days"></i>
+              <span data-i18n="lblForecastHeader">7-Day Agricultural Outlook</span>
+            </div>
+            <h2 class="panel-title" data-i18n="titleForecastingSection">Weather Forecasting &amp; Spray Windows</h2>
+            <p class="panel-desc" data-i18n="descForecastingSection">24-hour hourly microclimate progression and 7-day extended agricultural forecast to schedule protective applications before rain events.</p>
+          </div>
+          <div class="wp-header-actions">
+            <div class="geo-badge-large">
+              <i data-lucide="map-pin"></i>
+              <div>
+                <span id="forecastLocationName" class="loc-name">Detecting Field GPS...</span>
+                <span class="loc-coords">High-Resolution Open-Meteo Model</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 24-Hour Hourly Timeline Strip -->
+        <div class="forecast-section-block">
+          <div class="forecast-section-header">
+            <div>
+              <h3 class="forecast-section-title"><i data-lucide="clock"></i> <span data-i18n="titleHourly24">24-Hour Hourly Field Timeline</span></h3>
+              <p class="forecast-section-desc" data-i18n="descHourly24">Continuous progression of temperature, rain probability, humidity, and wind speed for optimal spray timing.</p>
+            </div>
+          </div>
+          <div class="hourly-timeline-slider" id="hourlyTimelineSlider">
+            <!-- Dynamically populated 24 hours -->
+          </div>
+        </div>
+
+        <!-- 7-Day Extended Agricultural Outlook Cards -->
+        <div class="forecast-section-block">
+          <div class="forecast-section-header">
+            <div>
+              <h3 class="forecast-section-title"><i data-lucide="calendar"></i> <span data-i18n="titleExtended7Day">7-Day Extended Agricultural Forecast</span></h3>
+              <p class="forecast-section-desc" data-i18n="descExtended7Day">Multi-day predictive outlook including expected precipitation accumulation, wind gust maximums, and daily spray suitability.</p>
+            </div>
+          </div>
+          <div class="forecast-7day-grid" id="forecast7DayGrid">
+            <!-- Dynamically populated 7 days -->
+          </div>
+        </div>
+
+        <!-- Agronomic Drying Window & Foliar Uptake Advisory -->
+        <div class="weather-subpanel advisory-highlight-card">
+          <div class="subpanel-header">
+            <i data-lucide="sun-medium"></i>
+            <h4 data-i18n="titleDryingGuidance">Agronomic Foliar Uptake &amp; Drying Guidance</h4>
+          </div>
+          <div class="uptake-advisory-grid">
+            <div class="uptake-box">
+              <span class="uptake-label" data-i18n="lblOptimalHours">Recommended Application Hours</span>
+              <strong class="uptake-val">6:30 AM – 10:30 AM &bull; 4:30 PM – 7:00 PM</strong>
+              <p class="uptake-desc" data-i18n="descOptimalHours">Avoid midday application when temperatures exceed 30°C to eliminate droplet vaporization and leaf stomata closure.</p>
+            </div>
+            <div class="uptake-box">
+              <span class="uptake-label" data-i18n="lblRainfast">Rainfast Uptake Threshold</span>
+              <strong class="uptake-val">4 to 6 Hours Prior to Rain</strong>
+              <p class="uptake-desc" data-i18n="descRainfast">Systemic fungicides (e.g., Azoxystrobin, Tebuconazole) require at least 4 hours of rain-free foliage for full translaminar absorption.</p>
+            </div>
+            <div class="uptake-box">
+              <span class="uptake-label" data-i18n="lblDewEvaporation">Dew Evaporation Window</span>
+              <strong class="uptake-val">Wait for Morning Dew Dry-off</strong>
+              <p class="uptake-desc" data-i18n="descDewEvaporation">Applying sprays to leaves dripping with heavy morning dew causes immediate runoff and pesticide dilution.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div> <!-- End #viewWeatherForecast -->
+
+    <!-- VIEW 4: Dedicated Weather History View -->
+    <div id="viewWeatherHistory" class="workspace-view hidden">
+      <section class="panel weather-dashboard-panel">
+        <div class="weather-panel-header">
+          <div class="wp-title-group">
+            <div class="wp-badge">
+              <i data-lucide="history"></i>
+              <span data-i18n="lblHistoricalArchive">Epidemiological Retrospective</span>
+            </div>
+            <h2 class="panel-title" data-i18n="titleHistorySection">Weather History &amp; Pathogen Incubation Log</h2>
+            <p class="panel-desc" data-i18n="descHistorySection">Past 7 days verified weather telemetry archive. Correlate recent rain accumulation and humidity spikes with visible leaf lesions.</p>
+          </div>
+          <div class="wp-header-actions">
+            <div class="geo-badge-large">
+              <i data-lucide="map-pin"></i>
+              <div>
+                <span id="historyLocationName" class="loc-name">Detecting Field GPS...</span>
+                <span class="loc-coords">Past 7-Day Satellite &amp; Station Log</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Past 7-Day Cumulative Metrics Summary -->
+        <div class="history-metrics-grid">
+          <div class="hist-metric-card">
+            <span class="hm-label" data-i18n="lblTotalRain">7-Day Rainfall Total</span>
+            <div class="hm-val-row">
+              <span id="histTotalRain" class="hm-val">--</span>
+              <span class="hm-unit">mm</span>
+            </div>
+            <span class="hm-sub" id="histRainEvents">Rain Events: --</span>
+          </div>
+          <div class="hist-metric-card">
+            <span class="hm-label" data-i18n="lblAvgTemp">Avg Field Temperature</span>
+            <div class="hm-val-row">
+              <span id="histAvgTemp" class="hm-val">--</span>
+              <span class="hm-unit">°C</span>
+            </div>
+            <span class="hm-sub" id="histTempExtremes">High: --°C / Low: --°C</span>
+          </div>
+          <div class="hist-metric-card">
+            <span class="hm-label" data-i18n="lblAvgHumidity">Avg Canopy Humidity</span>
+            <div class="hm-val-row">
+              <span id="histAvgHumidity" class="hm-val">--</span>
+              <span class="hm-unit">%</span>
+            </div>
+            <span class="hm-sub" id="histHumidityStatus">Canopy Moisture Index</span>
+          </div>
+          <div class="hist-metric-card">
+            <span class="hm-label" data-i18n="lblIncubationWindow">Disease Incubation Window</span>
+            <div class="hm-val-row">
+              <span id="histInfectionRating" class="hm-val text-warn">Active</span>
+            </div>
+            <span class="hm-sub">Pathogen Germination Period</span>
+          </div>
+        </div>
+
+        <!-- Historical Daily Weather Telemetry Table -->
+        <div class="history-table-container">
+          <div class="table-title-row">
+            <h3 class="forecast-section-title"><i data-lucide="table"></i> <span data-i18n="titleDailyHistoryTable">Daily Historical Microclimate Records (Past 7 Days)</span></h3>
+            <span class="archive-note">Synchronized from Open-Meteo Historical Records</span>
+          </div>
+          <div class="table-responsive">
+            <table class="agro-history-table">
+              <thead>
+                <tr>
+                  <th data-i18n="thDate">Date</th>
+                  <th data-i18n="thCondition">Weather Summary</th>
+                  <th data-i18n="thTempRange">Temp Range (°C)</th>
+                  <th data-i18n="thPrecip">Precipitation (mm)</th>
+                  <th data-i18n="thWindGust">Max Wind Gust</th>
+                  <th data-i18n="thSporeRisk">Canopy Wetness / Spore Germination Risk</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Dynamically populated past 7 days -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Epidemiological Infection Incubation Guide -->
+        <div class="weather-subpanel history-insight-panel">
+          <div class="subpanel-header">
+            <i data-lucide="dna"></i>
+            <h4 data-i18n="titleEpidemiologyCycle">How Historical Weather Triggers Current Foliar Symptoms</h4>
+          </div>
+          <p class="subpanel-desc" data-i18n="descEpidemiologyCycle">
+            Plant fungal and bacterial spores require an incubation period of 3 to 7 days between microscopic infection and visible necrotic lesion expression.
+          </p>
+          <div class="epidemiology-cards-grid">
+            <div class="epi-card">
+              <h5><i data-lucide="cloud-drizzle"></i> Days -7 to -5: Wet Foliage Inoculation</h5>
+              <p>Rain events or relative humidity exceeding 85% for more than 8 continuous hours allow fungal zoospores to swim across leaf surfaces and penetrate stomata.</p>
+            </div>
+            <div class="epi-card">
+              <h5><i data-lucide="hourglass"></i> Days -4 to -2: Hyphal Incubation</h5>
+              <p>Pathogen hyphae expand through the leaf mesophyll cells undetected, stealing plant nutrients while temperatures remain in the favorable 20°C–28°C range.</p>
+            </div>
+            <div class="epi-card">
+              <h5><i data-lucide="alert-circle"></i> Today: Visible Necrosis &amp; Sporulation</h5>
+              <p>Yellow chlorotic halos turn into concentric brown leaf spots and velvety spore masses. Uploading this leaf specimen now provides precision diagnostic targeting.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div> <!-- End #viewWeatherHistory -->
+  </main>
+
+  <!-- MODAL 1: Field Camera Capture -->
+  <div id="cameraModal" class="modal-overlay hidden" style="display: none;" onclick="if(event.target===this) { this.style.display='none'; this.classList.add('hidden'); }">
+    <div class="modal-dialog camera-dialog" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-heading">
+          <i data-lucide="camera"></i>
+          <span data-i18n="modalCameraTitle">Field Optical Specimen Capture</span>
+        </h3>
+        <button id="closeCameraBtn" class="btn-icon-close" title="Close Camera" onclick="var m=document.getElementById('cameraModal'); m.style.display='none'; m.classList.add('hidden');">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="camera-stream-box">
+        <video id="webcamVideo" autoplay playsinline muted></video>
+        <canvas id="cameraCanvas" hidden></canvas>
+        <div class="camera-viewfinder-grid">
+          <div class="grid-crosshair"></div>
+          <div class="grid-guidance" data-i18n="cameraGuidance">Align affected leaf or lesion inside focal boundary</div>
+        </div>
+      </div>
+
+      <div class="modal-footer camera-footer">
+        <button type="button" id="switchCameraBtn" class="btn btn-secondary">
+          <i data-lucide="refresh-cw"></i>
+          <span data-i18n="btnFlipCamera">Flip Camera</span>
+        </button>
+        <button type="button" id="snapPhotoBtn" class="btn btn-primary btn-snap">
+          <i data-lucide="camera"></i>
+          <span data-i18n="btnCapturePhoto">Capture Specimen</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Pathology Engine Configuration -->
+  <div id="settingsModal" class="modal-overlay hidden" style="display: none;" onclick="if(event.target===this) { this.style.display='none'; this.classList.add('hidden'); }">
+    <div class="modal-dialog" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-heading">
+          <i data-lucide="sliders-horizontal"></i>
+          <span data-i18n="modalConfigTitle">Diagnostic Engine Configuration</span>
+        </h3>
+        <button id="closeSettingsBtn" class="btn-icon-close" title="Close Settings" onclick="var m=document.getElementById('settingsModal'); m.style.display='none'; m.classList.add('hidden');">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p class="modal-instruction" data-i18n="configInstruction">
+          Configure diagnostic laboratory credentials to enable real-time multimodal optical spectroscopy on custom foliage specimens.
+        </p>
+
+        <div class="form-field-group">
+          <label for="apiKeyInput" class="field-label" data-i18n="lblEngineKey">Pathology Engine Key (API Key)</label>
+          <div class="input-with-action">
+            <input type="password" id="apiKeyInput" class="field-input" placeholder="Enter key...">
+            <button type="button" id="toggleKeyVisibilityBtn" class="btn-field-addon">
+              <i data-lucide="eye"></i>
+            </button>
+          </div>
+          <span class="field-help" data-i18n="keyHelp">Stored securely in local environment. Configured keys enable live pathology processing.</span>
+        </div>
+
+        <div id="apiTestStatus" class="status-callout hidden"></div>
+
+        <div class="modal-split-actions">
+          <button type="button" id="testKeyBtn" class="btn btn-secondary">
+            <i data-lucide="check-circle-2"></i>
+            <span data-i18n="btnTestConnection">Test Connection</span>
+          </button>
+          <div class="action-group-right">
+            <button type="button" id="clearKeyBtn" class="btn btn-link-danger" data-i18n="btnClear">Clear</button>
+            <button type="button" id="saveKeyBtn" class="btn btn-primary" data-i18n="btnSaveKey">Save Configuration</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Diagnostic Records Archive -->
+  <div id="historyModal" class="modal-overlay hidden" style="display: none;" onclick="if(event.target===this) { this.style.display='none'; this.classList.add('hidden'); }">
+    <div class="modal-dialog modal-wide" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <h3 class="modal-heading">
+          <i data-lucide="archive"></i>
+          <span data-i18n="modalArchiveTitle">Field Diagnostic Archives</span>
+        </h3>
+        <div class="modal-header-actions">
+          <button id="clearHistoryBtn" class="btn btn-sm btn-link-danger" data-i18n="btnClearArchive">Clear Records</button>
+          <button id="closeHistoryBtn" class="btn-icon-close" title="Close Archive" onclick="var m=document.getElementById('historyModal'); m.style.display='none'; m.classList.add('hidden');">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div id="historyEmpty" class="archive-empty-state">
+          <i data-lucide="clipboard-list" class="empty-icon"></i>
+          <p data-i18n="archiveEmpty">No field diagnostic records archived yet.</p>
+        </div>
+        <div id="historyList" class="archive-cards-list hidden">
+          <!-- Populated from localStorage -->
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="var m=document.getElementById('historyModal'); m.style.display='none'; m.classList.add('hidden');">
+          Close Window
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toastContainer" class="toast-stack"></div>
+
+  <!-- Application Logic & Translation Engine -->
+  <script src="app.js"></script>
+</body>
+</html>
