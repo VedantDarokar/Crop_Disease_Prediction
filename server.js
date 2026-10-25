@@ -11,6 +11,17 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json({ limit: '35mb' }));
 app.use(express.urlencoded({ extended: true, limit: '35mb' }));
 
+// Enable CORS so frontend on Vercel or any domain can call backend APIs
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -1067,11 +1078,15 @@ function generateReferenceDiagnosis(pureBase64, sampleId, language, cropHint) {
   };
 }
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`=======================================================`);
-  console.log(`🌱 AgroPath Enterprise — Precision Crop Pathology & Advisory`);
-  console.log(`🚀 Diagnostic Server active: http://localhost:${PORT}`);
-  console.log(`🔑 Key status: ${Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim().length > 10) ? 'ACTIVE' : 'STANDBY'}`);
-  console.log(`=======================================================`);
-});
+// Start server (only when running as standalone Node process, not in Vercel serverless)
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`=======================================================`);
+    console.log(`🌱 AgroPath Enterprise — Precision Crop Pathology & Advisory`);
+    console.log(`🚀 Diagnostic Server active: http://localhost:${PORT}`);
+    console.log(`🔑 Key status: ${Boolean(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY.trim().length > 10) ? 'ACTIVE' : 'STANDBY'}`);
+    console.log(`=======================================================`);
+  });
+}
+
+module.exports = app;
